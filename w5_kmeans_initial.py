@@ -46,29 +46,6 @@ from sklearn import metrics
 from matplotlib import animation
 from PIL import Image
 
-# '''
-# K-Means algorithm using API
-# '''
-# # predict the cluster id
-# kmeans = KMeans(init='random',n_init = 1,n_clusters=4, random_state=9)
-# pred_cluster_id = kmeans.fit_predict(sample_dots)
-# plt.scatter(x_location,y_location, c = pred_cluster_id) # the dots after k-means 
-
-# # get the cluster centroids 
-# centroids = kmeans.fit(sample_dots).cluster_centers_
-# x_centroid = centroids[:,0]
-# y_centroid = centroids[:,1]
-# plt.scatter(x_centroid,y_centroid,s = 400,marker='*')
-# plt.show()
-
-# # compute the score of algorithm
-# score1 = metrics.calinski_harabasz_score(sample_dots, pred_cluster_id)
-# score2 = metrics.calinski_harabasz_score(sample_dots, cluster_id)
-# print(score1)
-# print(score2)
-
-
-
 def assign_center(centers,site):
     min_distance = [( ((site.x_location-centers[0].x_location) ** 2) + ((site.y_location-centers[0].y_location)**2) ) ** 0.5,0]
     for i in range(len(centers)):
@@ -116,34 +93,16 @@ def k_means(sites, init_centers):
         centers = new_centers[:]
 
         plt.clf()
-        x_sample_location = []
-        y_sample_location = []
-        for i in range(len(sites)):
-            if sites[i].center == 0:
-                x_sample_location.append(sites[i].x_location)
-                y_sample_location.append(sites[i].y_location)  
-        plt.scatter(x_sample_location,y_sample_location,marker='o',c = 'darkorchid')
-        x_sample_location = []
-        y_sample_location = []
-        for i in range(len(sites)):
-            if sites[i].center == 1:
-                x_sample_location.append(sites[i].x_location)
-                y_sample_location.append(sites[i].y_location)           
-        plt.scatter(x_sample_location,y_sample_location,marker='o',c = 'limegreen')
-        x_sample_location = []
-        y_sample_location = []
-        for i in range(len(sites)):
-            if sites[i].center == 2:
-                x_sample_location.append(sites[i].x_location)
-                y_sample_location.append(sites[i].y_location)   
-        plt.scatter(x_sample_location,y_sample_location,marker='o',c = 'sandybrown')
-        x_sample_location = []
-        y_sample_location = []
-        for i in range(len(sites)):
-            if sites[i].center == 3:
-                x_sample_location.append(sites[i].x_location)
-                y_sample_location.append(sites[i].y_location)   
-        plt.scatter(x_sample_location,y_sample_location,marker='o',c = 'lightslategrey')
+        color_squence = ['darkorchid','limegreen','sandybrown','lightslategrey','rosybrown','sienna','seagreen']
+        for j in range(len(centers)):
+            x_sample_location = []
+            y_sample_location = []
+            for i in range(len(sites)):
+                if sites[i].center == j:
+                    x_sample_location.append(sites[i].x_location)
+                    y_sample_location.append(sites[i].y_location)  
+            print(len(x_sample_location))
+            plt.scatter(x_sample_location,y_sample_location,marker='o',c = color_squence[j%7])
 
         x_center_location = []
         y_center_location = []
@@ -153,7 +112,7 @@ def k_means(sites, init_centers):
         plt.scatter(x_center_location,y_center_location,s=400,marker='*',c='red')
         plt.savefig(str(n_fig)+'.png')
         n_fig = n_fig+1
-        plt.pause(2)
+        plt.pause(1)
 
 class Site:
     center = 0
@@ -174,11 +133,11 @@ if __name__ == "__main__":
     Initial sample sites and initial centers
     '''
     # define super param
-    CENTERS=[[-1,1], [-1,-1], [1,1], [1,-1]]
+    CENTERS=[[-1,1], [-1,-1], [1,1], [1,-1],[2,2]]
     # CENTERS=[[-1,-1], [-1,1]]
     K = len(CENTERS)
     N_SAMPLES = 300 # numbel of samples, K samples is used for initial centers
-    CLUSTER_STD = [0.5, 0.5, 0.5, 0.5] # std of each cluster
+    CLUSTER_STD = [0.5, 0.5, 0.5, 0.5, 0.4] # std of each cluster
     # CLUSTER_STD = [0.2, 0.2]
     
     # inital sample sites
@@ -224,14 +183,16 @@ if __name__ == "__main__":
     '''
     [Object_centers,n_fig] = k_means(Object_sites, Object_centers)
     plt.ioff()
+    plt.show()
+
 
     im = Image.open("0.png")
     images=[]
     for i in range(n_fig):
         if i!=0:
             fpath = str(i) + ".png"
-            images.append(Image.open(fpath));
-    im.save('kmeans.gif', save_all=True, append_images=images,loop=100,duration=1)
-    plt.show()
+            images.append(Image.open(fpath))
+    im.save('kmeans.gif', save_all=True, append_images=images,loop=2000,duration=1)
+    
 
 
