@@ -49,6 +49,18 @@ import matplotlib.patches as mpatches
 from math import pi
 from numpy import cos, sin
 
+def cal_global_center(sites):
+    sum_x = 0
+    sum_y = 0
+    cnt_sites = 0
+    for i in range(len(sites)):
+            cnt_sites = cnt_sites+1
+            sum_x = sum_x + sites[i].x_location
+            sum_y = sum_y + sites[i].y_location
+    x_location = sum_x/cnt_sites
+    y_location = sum_y/cnt_sites
+    return x_location,y_location
+
 def cal_nextcenter(density,distance_matrix,centers,pre_siteid_of_center):
     distance_all_sites = []
     n_sites = len(density)
@@ -186,6 +198,7 @@ if __name__ == "__main__":
     '''
     Initial sample sites
     '''
+
     Object_sites = []
     sample_sites_locations = []
     temp_sample_sites_locations, cluster_id = make_blobs(n_samples=N_SAMPLES, n_features=2, centers = CENTERS, cluster_std=CLUSTER_STD, random_state =9)
@@ -202,6 +215,8 @@ if __name__ == "__main__":
     '''
     Inital centers
     '''
+    #############################################################################
+    # Random
     Object_centers = []
     initial_centers_locations= []
     x_center_location = []
@@ -250,6 +265,7 @@ if __name__ == "__main__":
 
 
     #############################################################################
+    # density center
     Object_centers = []
     initial_centers_locations= []
     x_center_location = []
@@ -315,4 +331,52 @@ if __name__ == "__main__":
     im.save(str(algorithm_kind) + '.gif', save_all=True, append_images=images,loop=1000,duration=500)
     
 
+    #############################################################################
+    # part 
+    algorithm_kind = 'Equally Divided Partition'
 
+    [x_global_center,y_global_center] = cal_global_center(Object_sites)
+    [distance_matrix,distance_list] = cal_distance(Object_sites)
+    max_x_location = max(x_sample_location)
+    min_x_location = min(x_sample_location)
+    max_distance = max_x_location-min_x_location
+    divide_distance = max_distance/K
+    divide_location = []
+    for i in range(K+1):
+        divide_location.append(min_x_location + i * divide_distance)
+
+    Object_centers = []
+    initial_centers_locations= []
+    x_center_location = []
+    y_center_location = []
+
+    for k in range(K):
+        x_center_location.append( (divide_location[k] + divide_location[k+1])/2 )
+        y_center_location.append( y_global_center )
+        initial_centers_locations.append([x_center_location[k],y_center_location[k]])
+        Object_centers.append( Center(k,initial_centers_locations[k][0],initial_centers_locations[k][1]) )
+
+    fig = plt.figure(figsize=(5,5))
+    plt.scatter(x_sample_location,y_sample_location, marker='o') # the sites before k-means
+    plt.scatter(x_center_location,y_center_location,s = 300,marker='*',c = 'red')
+    plt.title('Init by '+ algorithm_kind)
+    plt.savefig('inital_Partition.png')
+
+    '''
+    K-Means and plt.show
+    '''
+    plt.ion()
+    [Object_centers,n_fig] = k_means(Object_sites, Object_centers,algorithm_kind)
+    plt.ioff()
+    plt.show()
+
+    '''
+    Save figs as gif
+    '''
+    im = Image.open(str(algorithm_kind) + "_0.png")
+    images=[]
+    for i in range(n_fig):
+        if i!=0:
+            fpath = str(algorithm_kind) + '_' + str(i) + ".png"
+            images.append(Image.open(fpath))
+    im.save(str(algorithm_kind) + '.gif', save_all=True, append_images=images,loop=1000,duration=500)
