@@ -89,7 +89,8 @@ def c_means(sites, init_centers,algorithm_kind,m):
                 if sites[i].center == j:
                     x_sample_location.append(sites[i].x_location)
                     y_sample_location.append(sites[i].y_location)  
-            plt.scatter(x_sample_location,y_sample_location,marker='o',c = color_squence[j%7])
+                    plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = max(nu_matrix[i][:]))
+            # plt.scatter(x_sample_location,y_sample_location,marker='o',c = color_squence[j%7])
 
         x_center_location = []
         y_center_location = []
@@ -101,7 +102,7 @@ def c_means(sites, init_centers,algorithm_kind,m):
         plt.xlabel('Number of iterations:' + str(n_fig+1))
         plt.savefig(str(algorithm_kind)+ '_' + str(n_fig)+'.png')
         n_fig = n_fig+1
-        plt.pause(0.5)
+        plt.pause(0.01)
 
 class Site:
     center = 0
@@ -127,7 +128,7 @@ if __name__ == "__main__":
     K = len(CENTERS)
     N_SAMPLES = 300 # numbel of samples, K samples is used for initial centers
     CLUSTER_STD = [0.8, 0.8, 0.5, 0.5, 0.8] # std of each cluster
-    M = 2
+    M = 3
     '''
     Initial sample sites
     '''
