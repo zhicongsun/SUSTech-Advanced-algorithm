@@ -191,3 +191,14 @@ if __name__ == "__main__":
     plt.ioff()
     plt.show()
 
+    '''
+    Save figs as gif
+    '''
+    im = Image.open(str(algorithm_kind) + "_0.png")
+    images=[]
+    for i in range(n_fig):
+        if i!=0:
+            fpath = str(algorithm_kind) + '_' + str(i) + ".png"
+            images.append(Image.open(fpath))
+    im.save(str(algorithm_kind) + '.gif', save_all=True, append_images=images,loop=1000,duration=500)
+
