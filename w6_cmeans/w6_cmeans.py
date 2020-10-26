@@ -128,7 +128,7 @@ if __name__ == "__main__":
     K = len(CENTERS)
     N_SAMPLES = 300 # numbel of samples, K samples is used for initial centers
     CLUSTER_STD = [0.8, 0.8, 0.5, 0.5, 0.8] # std of each cluster
-    M = 3
+    M = 1.5
     '''
     Initial sample sites
     '''
@@ -190,15 +190,4 @@ if __name__ == "__main__":
     [Object_centers,n_fig] = c_means(Object_sites, Object_centers,algorithm_kind,M)
     plt.ioff()
     plt.show()
-
-    '''
-    Save figs as gif
-    '''
-    im = Image.open(str(algorithm_kind) + "_0.png")
-    images=[]
-    for i in range(n_fig):
-        if i!=0:
-            fpath = str(algorithm_kind) + '_' + str(i) + ".png"
-            images.append(Image.open(fpath))
-    im.save(str(algorithm_kind) + '.gif', save_all=True, append_images=images,loop=1000,duration=500)
 
