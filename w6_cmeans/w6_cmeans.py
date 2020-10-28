@@ -82,16 +82,23 @@ def c_means(sites, init_centers,algorithm_kind,m):
 
         plt.clf()
         color_squence = ['darkorchid','limegreen','sandybrown','lightslategrey','rosybrown','sienna','seagreen']
-    
-        #draw sites,each site belongs to a center and has only one color 
         for j in range(len(centers)):
             x_sample_location = []
             y_sample_location = []
             for i in range(len(sites)):
-                if sites[i].center == j:
-                    x_sample_location.append(sites[i].x_location)
-                    y_sample_location.append(sites[i].y_location)  
-                    plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = max(nu_matrix[i][:]))
+                x_sample_location.append(sites[i].x_location)
+                y_sample_location.append(sites[i].y_location)  
+                plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = nu_matrix[i][j])
+
+        # #draw sites,each site belongs to a center and has only one color 
+        # for j in range(len(centers)):
+        #     x_sample_location = []
+        #     y_sample_location = []
+        #     for i in range(len(sites)):
+        #         if sites[i].center == j:
+        #             x_sample_location.append(sites[i].x_location)
+        #             y_sample_location.append(sites[i].y_location)  
+        #             plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = max(nu_matrix[i][:]))
 
         x_center_location = []
         y_center_location = []
@@ -99,6 +106,8 @@ def c_means(sites, init_centers,algorithm_kind,m):
             x_center_location.append(centers[i].x_location)
             y_center_location.append(centers[i].y_location)    
         plt.scatter(x_center_location,y_center_location,s=400,marker='*',c='red')
+        plt.title('Init by '+ algorithm_kind)
+        plt.xlabel('Number of iterations:' + str(n_fig+1))
         plt.savefig(str(algorithm_kind)+ '_' + str(n_fig)+'.png')
         n_fig = n_fig+1
         plt.pause(0.01)
@@ -176,6 +185,7 @@ if __name__ == "__main__":
         initial_centers_locations.append([x_center_location[k],y_center_location[k]])
     
     # show the initial situation
+    fig = plt.figure(figsize=(5,5))
     plt.scatter(x_sample_location,y_sample_location, marker='o') # the sites before k-means
     plt.scatter(x_center_location,y_center_location,s = 300,marker='*',c = 'red')
     plt.title('Init by '+ algorithm_kind)
@@ -188,3 +198,15 @@ if __name__ == "__main__":
     [Object_centers,n_fig] = c_means(Object_sites, Object_centers,algorithm_kind,M)
     plt.ioff()
     plt.show()
+
+    '''
+    Save figs as gif
+    '''
+    im = Image.open(str(algorithm_kind) + "_0.png")
+    images=[]
+    for i in range(n_fig):
+        if i!=0:
+            fpath = str(algorithm_kind) + '_' + str(i) + ".png"
+            images.append(Image.open(fpath))
+    im.save(str(algorithm_kind) + '.gif', save_all=True, append_images=images,loop=1000,duration=500)
+
