@@ -86,11 +86,19 @@ def c_means(sites, init_centers,algorithm_kind,m):
             x_sample_location = []
             y_sample_location = []
             for i in range(len(sites)):
-                if sites[i].center == j:
-                    x_sample_location.append(sites[i].x_location)
-                    y_sample_location.append(sites[i].y_location)  
-                    plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = max(nu_matrix[i][:]))
-            # plt.scatter(x_sample_location,y_sample_location,marker='o',c = color_squence[j%7])
+                x_sample_location.append(sites[i].x_location)
+                y_sample_location.append(sites[i].y_location)  
+                plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = nu_matrix[i][j])
+
+        # #draw sites,each site belongs to a center and has only one color 
+        # for j in range(len(centers)):
+        #     x_sample_location = []
+        #     y_sample_location = []
+        #     for i in range(len(sites)):
+        #         if sites[i].center == j:
+        #             x_sample_location.append(sites[i].x_location)
+        #             y_sample_location.append(sites[i].y_location)  
+        #             plt.scatter(sites[i].x_location,sites[i].y_location,marker='o',c = color_squence[j%7],alpha = max(nu_matrix[i][:]))
 
         x_center_location = []
         y_center_location = []
